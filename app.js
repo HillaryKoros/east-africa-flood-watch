@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     map.addControl(drawControl);
 
     // Load GeoJSON and initialize interface
-    fetch('/data/output.geojson')
+    fetch('data\GHA_Admin1.geojson')
         .then(response => response.json())
         .then(data => {
             window.ghaCountries = data;
