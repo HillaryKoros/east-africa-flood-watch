@@ -1,0 +1,108 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>East Africa Flood Watch</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+    <link rel="stylesheet" href="/src/styles/styles.css">
+</head>
+<body>
+    <div class="header">
+        <div class="logo-text">EAST AFRICA <span>FLOOD</span> WATCH</div>
+        <div class="nav-menu">
+            <a href="#">HOME</a>
+            <a href="#" class="active">MAPVIEWER</a>
+            <a href="#">REPORTS</a>
+            <a href="#">ANALYSIS</a>
+            <a href="#">FLOOD INDICATORS</a>
+            <a href="#">ABOUT</a>
+            <a href="#">PARTNERS</a>
+            <a href="#">CONTACT US</a>
+        </div>
+    </div>
+    <div class="main-container">
+        <div class="sidebar">
+            <div class="sidebar-buttons">
+                <button class="sidebar-btn active" data-section="monitoring">Monitoring</button>
+                <button class="sidebar-btn" data-section="forecast">Forecast</button>
+            </div>
+            
+            <!-- Monitoring Section -->
+            <div class="content-section active" id="monitoring-section">
+                <div class="filters">
+                    <select class="filter-select">
+                        <option>FILTER BY COUNTRY</option>
+                        <option>Kenya</option>
+                        <option>Uganda</option>
+                        <option>Tanzania</option>
+                        <option>Ethiopia</option>
+                        <option>Somalia</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>FILTER BY BASIN</option>
+                        <option>Nile Basin</option>
+                        <option>Tana Basin</option>
+                        <option>Lake Victoria Basin</option>
+                    </select>
+                </div>
+                <div class="layers-container">
+                    <div class="layer-group">
+                        <div class="layer-group-title">FLOOD MONITORING</div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="current-flood">
+                            <label for="current-flood">Current Flood Status</label>
+                            <span class="info-icon">ⓘ</span>
+                        </div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="water-level">
+                            <label for="water-level">Water Level Stations</label>
+                            <span class="info-icon">ⓘ</span>
+                        </div>
+                    </div>
+                    
+                    <div class="layer-group">
+                        <div class="layer-group-title">PRECIPITATION</div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="rainfall-data">
+                            <label for="rainfall-data">24hr Rainfall Data</label>
+                            <span class="info-icon">ⓘ</span>
+                        </div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="radar-data">
+                            <label for="radar-data">Radar Rainfall</label>
+                            <span class="info-icon">ⓘ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecast Section -->
+            <div class="content-section" id="forecast-section">
+                <div class="filters">
+                    <select class="filter-select">
+                        <option>SELECT FORECAST MODEL</option>
+                        <option>MIC HYDRO</option>
+                        <option>GEOFSM</option>
+                        <option>FLOODPROOFS</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>FORECAST PERIOD</option>
+                        <option>1-day</option>
+                        <option>3-day</option>
+                        <option>7-day</option>
+                    </select>
+                </div>
+                <div class="layers-container">
+                    <!-- Forecast layer groups here -->
+                </div>
+            </div>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+    <script src="/src/scripts/app.js"></script>
+</body>
+</html>
