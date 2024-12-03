@@ -1,4 +1,3 @@
-// app.js
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the map
     const map = L.map('map').setView([0.3, 37.5], 6);
@@ -254,7 +253,7 @@ document.addEventListener('DOMContentLoaded', function() {
     map.addControl(drawControl);
 
     // Load GeoJSON and initialize interface
-    fetch('output.geojson')
+    fetch('/data/output.geojson')
         .then(response => response.json())
         .then(data => {
             window.ghaCountries = data;
