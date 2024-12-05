@@ -4,58 +4,77 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>East Africa Flood Watch</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <!-- Leaflet Draw CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header class="header">
         <div class="logo-text">EAST AFRICA FLOOD WATCH</div>
         <nav class="nav-menu">
-            <a href="#">Home</a>
-            <a href="#" class="active">Mapviewer</a>
-            <a href="#">Reports</a>
-            <a href="#">Analysis</a>
+            <a href="#" class="nav-item">Home</a>
+            <a href="#" class="nav-item active">Mapviewer</a>
+            <a href="#" class="nav-item">Reports</a>
+            <a href="#" class="nav-item">Analysis</a>
+            <a href="#" class="nav-item">About</a>
+            <a href="#" class="nav-item">Contact</a>
+            <a href="#" class="nav-item"><i class="fas fa-search"></i></a>
         </nav>
     </header>
-    
+
     <main class="main-container">
-        <aside class="sidebar">
+        <div class="sidebar">
             <div class="sidebar-buttons">
-                <button class="sidebar-btn active" data-section="monitoring">Monitoring</button>
-                <button class="sidebar-btn" data-section="forecast">Forecast</button>
+                <button class="sidebar-btn active" data-section="monitoring">
+                    <i class="fas fa-chart-line"></i> Monitoring
+                </button>
+                <button class="sidebar-btn" data-section="forecast">
+                    <i class="fas fa-chart-area"></i> Forecast
+                </button>
             </div>
-            
-            <div class="content-section active" id="monitoring-section">
+
+            <div id="monitoring-section" class="content-section active">
                 <div class="filters">
-                    <!-- Country filter will be inserted here by JavaScript -->
+                    <!-- Country and Cluster Filters will be dynamically added -->
                 </div>
                 <div class="layers-container">
-                    <!-- Layer groups will be inserted here by JavaScript -->
+                    <!-- Layer groups will be dynamically populated -->
                 </div>
             </div>
-            
-            <div class="content-section" id="forecast-section">
+
+            <div id="forecast-section" class="content-section">
                 <div class="filters">
-                    <!-- Country filter will be inserted here by JavaScript -->
+                    <!-- Country and Cluster Filters will be dynamically added -->
                 </div>
                 <div class="layers-container">
-                    <!-- Layer groups will be inserted here by JavaScript -->
+                    <!-- Layer groups will be dynamically populated -->
                 </div>
             </div>
-        </aside>
-        
+        </div>
+
         <div id="map"></div>
-        
+
         <div id="map-controls">
-            <button id="zoom-in" title="Zoom In">+</button>
-            <button id="zoom-out" title="Zoom Out">-</button>
-            <button id="reset-view" title="Reset View">⟲</button>
+            <button id="zoom-in" title="Zoom In"><i class="fas fa-plus"></i></button>
+            <button id="zoom-out" title="Zoom Out"><i class="fas fa-minus"></i></button>
+            <button id="reset-view" title="Reset View"><i class="fas fa-redo"></i></button>
         </div>
     </main>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
+    
+    <!-- Application Script -->
     <script src="app.js"></script>
 </body>
 </html>

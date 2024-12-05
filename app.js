@@ -1,287 +1,278 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Placeholder GeoJSON for testing
-    let ghaCountries = {
-        type: "FeatureCollection",
-        features: [] // Empty initially, will be loaded from the GeoJSON file
-    };
-
-    // Initialize the map
-    const map = L.map('map').setView([7.9465, -1.0232], 7); // Centered on Ghana
-
-    // Add the satellite layer as base map
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri'
-    }).addTo(map);
-
-    // Layer groups for different categories
-    const layerGroups = {
-        floodIndicators: L.layerGroup(),
-        precipitation: L.layerGroup(),
-        soilMoisture: L.layerGroup(),
-        vegetation: L.layerGroup(),
-        temperature: L.layerGroup(),
-        geographic: L.layerGroup(),
-        thematic: L.layerGroup(),
-        displacement: L.layerGroup(),
-        boundaries: L.layerGroup(),
-        forecast: L.layerGroup()
-    };
-
-    Object.values(layerGroups).forEach(group => group.addTo(map));
-
-    // Track active layers
-    const layers = {};
-    let currentGeoJSONLayer = null;
-
-    function getGeoJSONStyle(feature) {
-        return {
-            fillColor: '#1976d2',
-            weight: 2,
-            opacity: 1,
-            color: '#ffffff',
-            fillOpacity: 0.3
-        };
-    }
-
-    function filterByCountry(countryName) {
-        if (currentGeoJSONLayer) {
-            map.removeLayer(currentGeoJSONLayer);
+    class FloodWatchApp {
+        constructor() {
+            this.map = null;
+            this.layers = {};
+            this.layerGroups = {};
+            this.currentGeoJSONLayer = null;
+            this.ghaCountries = {
+                type: "FeatureCollection",
+                features: []
+            };
         }
 
-        const filteredGeoJSON = countryName ? {
-            type: "FeatureCollection",
-            features: ghaCountries.features.filter(feature => 
-                feature.properties.COUNTRY === countryName
-            )
-        } : ghaCountries;
-
-        currentGeoJSONLayer = L.geoJSON(filteredGeoJSON, {
-            style: getGeoJSONStyle
-        }).addTo(map);
-
-        if (filteredGeoJSON.features.length > 0) {
-            map.fitBounds(currentGeoJSONLayer.getBounds());
+        init() {
+            this.initMap();
+            this.initLayerGroups();
+            this.setupLayerGroups();
+            this.initEventListeners();
+            this.loadGeoJSON();
         }
-    }
 
-    // Create placeholder layer
-    function createPlaceholderLayer(name, category) {
-        // Use a mock layer for demonstration
-        return L.tileLayer(`https://example.com/tiles/${category}/${name}.png`, {
-            opacity: 0.7
-        });
-    }
+        initMap() {
+            this.map = L.map('map', {
+                center: [7.9465, -1.0232],
+                zoom: 7,
+                zoomControl: false
+            });
 
-    // Handle layer toggle
-    function handleLayerToggle(e) {
-        const layerId = e.target.id;
-        const category = e.target.dataset.category;
-        
-        if (e.target.checked) {
-            if (layers[layerId]) {
-                map.removeLayer(layers[layerId]);
+            // Satellite base layer
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                attribution: 'Tiles &copy; Esri'
+            }).addTo(this.map);
+
+            // Custom zoom controls
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(this.map);
+
+            // Drawing control
+            const drawControl = new L.Control.Draw({
+                draw: {
+                    polygon: true,
+                    rectangle: true,
+                    circle: false,
+                    circlemarker: false,
+                    marker: false,
+                    polyline: false
+                }
+            });
+            this.map.addControl(drawControl);
+
+            // Legend control
+            const legend = L.control({position: 'bottomright'});
+            legend.onAdd = () => {
+                const div = L.DomUtil.create('div', 'legend');
+                this.updateLegend(div);
+                return div;
+            };
+            legend.addTo(this.map);
+        }
+
+        initLayerGroups() {
+            const categories = [
+                'floodIndicators', 'precipitation', 'soilMoisture', 
+                'vegetation', 'temperature', 'geographic', 
+                'thematic', 'displacement', 'boundaries', 'forecast'
+            ];
+
+            this.layerGroups = categories.reduce((groups, category) => {
+                groups[category] = L.layerGroup().addTo(this.map);
+                return groups;
+            }, {});
+        }
+
+        setupLayerGroups() {
+            const monitoringLayers = {
+                'Precipitation': [
+                    'Standardized precipitation index (CHIRPS)',
+                    'Monthly precipitation (CHIRPS)'
+                ],
+                'Soil Moisture': [
+                    'Monthly soil moisture',
+                    'Seasonal soil moisture'
+                ],
+                'Vegetation Condition': [
+                    'Monthly condition',
+                    'Seasonal condition'
+                ],
+                'Temperature Condition': [
+                    'Maximum temperature',
+                    'Minimum temperature'
+                 ]
+            };
+
+            const forecastLayers = {
+                'Models': [
+                    'FLOODPROOFS',
+                    'MIC-HYDRO',
+                    'GEOFSM'
+                ],
+                'Precipitation Forecast': [
+                    'Monthly precipitation forecast',
+                    'Seasonal precipitation forecast'
+                ],
+                'Temperature Forecast': [
+                    'Monthly temperature forecast',
+                    'Seasonal temperature forecast'
+                ]
+            };
+
+            this.createLayerGroups(monitoringLayers, 'monitoring');
+            this.createLayerGroups(forecastLayers, 'forecast');
+        }
+
+        createLayerGroups(groups, section) {
+            const container = document.querySelector(`#${section}-section .layers-container`);
+            
+            Object.entries(groups).forEach(([groupName, layers]) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'layer-group';
+                groupDiv.innerHTML = `
+                    <div class="layer-group-title">${groupName}</div>
+                    ${layers.map(layer => `
+                        <div class="layer-item">
+                            <input type="checkbox" id="${layer.toLowerCase().replace(/\s+/g, '-')}" 
+                                   data-category="${section}">
+                            <label for="${layer.toLowerCase().replace(/\s+/g, '-')}">${layer}</label>
+                        </div>
+                    `).join('')}
+                `;
+                container.appendChild(groupDiv);
+            });
+
+            // Add event listeners to new checkboxes
+            container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', this.handleLayerToggle.bind(this));
+            });
+        }
+
+        handleLayerToggle(e) {
+            const layerId = e.target.id;
+            const category = e.target.dataset.category;
+            
+            if (e.target.checked) {
+                if (this.layers[layerId]) {
+                    this.map.removeLayer(this.layers[layerId]);
+                }
+                this.layers[layerId] = this.createPlaceholderLayer(layerId, category);
+                this.layers[layerId].addTo(this.layerGroups[category]);
+            } else if (this.layers[layerId]) {
+                this.map.removeLayer(this.layers[layerId]);
+                delete this.layers[layerId];
             }
-            layers[layerId] = createPlaceholderLayer(layerId, category);
-            layers[layerId].addTo(layerGroups[category]);
-        } else if (layers[layerId]) {
-            map.removeLayer(layers[layerId]);
-            delete layers[layerId];
+            this.updateLegend();
         }
-        updateLegend();
-    }
 
-    // Initialize filters and layers
-    function initializeInterface() {
-        const countryFilter = document.createElement('select');
-        countryFilter.className = 'filter-select';
-        countryFilter.innerHTML = '<option value="">All Countries</option>';
+        createPlaceholderLayer(name, category) {
+            return L.tileLayer(`https://example.com/tiles/${category}/${name}.png`, {
+                opacity: 0.7
+            });
+        }
 
-        // Add countries from GeoJSON
-        const countries = [...new Set(ghaCountries.features.map(f => f.properties.COUNTRY))].sort();
-        countries.forEach(country => {
-            countryFilter.innerHTML += `<option value="${country}">${country}</option>`;
-        });
+        initEventListeners() {
+            // Sidebar section switching
+            document.querySelectorAll('.sidebar-btn').forEach(btn => {
+                btn.addEventListener('click', () => this.switchSection(btn));
+            });
 
-        // Add country filter to both monitoring and forecast sections
-        ['monitoring', 'forecast'].forEach(section => {
-            const filterDiv = document.querySelector(`#${section}-section .filters`);
-            const filterClone = countryFilter.cloneNode(true);
-            filterClone.addEventListener('change', (e) => filterByCountry(e.target.value));
-            filterDiv.appendChild(filterClone);
-        });
+            // Map controls
+            document.getElementById('zoom-in')?.addEventListener('click', () => this.map.zoomIn());
+            document.getElementById('zoom-out')?.addEventListener('click', () => this.map.zoomOut());
+            document.getElementById('reset-view')?.addEventListener('click', () => this.resetMapView());
+        }
 
-        // Initialize layer checkboxes
-        setupLayerGroups();
-    }
-
-    function setupLayerGroups() {
-        // Monitoring section layers
-        const monitoringLayers = {
-            'Combined Flood Indicators': [
-                'Current flood conditions (10-day CFI)',
-                'Monthly combined CFI',
-                'Seasonal combined CFI'
-            ],
-            'Precipitation': [
-                'Standardized precipitation index (CHIRPS)',
-                'Monthly precipitation (CHIRPS)'
-            ],
-            'Soil Moisture': [
-                '10-day soil moisture',
-                'Monthly soil moisture',
-                'Seasonal soil moisture'
-            ],
-            'Vegetation Anomaly': [
-                '10-day vegetation anomaly',
-                'Monthly vegetation anomaly',
-                'Seasonal vegetation anomaly'
-            ],
-            'Vegetation Condition': [
-                '10-day condition',
-                'Monthly condition',
-                'Seasonal condition'
-            ],
-            'Temperature Condition': [
-                'Maximum temperature',
-                'Minimum temperature'
-            ],
-            'Geographic Background': [
-                'Koppen climate classification',
-                'Soil type',
-                'Land use type',
-                'Thermal regions'
-            ],
-            'Thematic Layers': [
-                'Acute food insecurity',
-                'Cropland area mask',
-                'Rangeland area mask',
-                'Population distribution projection'
-            ],
-            'Disaster Displacement': [
-                'Flood disaster displacement',
-                'Mixed disaster displacement'
-            ]
-        };
-
-        // Forecast section layers
-        const forecastLayers = {
-            'Models': [
-                'FLOODPROOFS',
-                'MIC-HYDRO',
-                'GEOFSM'
-            ],
-            'Precipitation Forecast': [
-                'Monthly precipitation forecast',
-                'Seasonal precipitation forecast'
-            ],
-            'Temperature Forecast': [
-                'Monthly temperature forecast',
-                'Seasonal temperature forecast'
-            ]
-        };
-
-        // Create monitoring layers
-        const monitoringContainer = document.querySelector('#monitoring-section .layers-container');
-        createLayerGroups(monitoringLayers, monitoringContainer, 'monitoring');
-
-        // Create forecast layers
-        const forecastContainer = document.querySelector('#forecast-section .layers-container');
-        createLayerGroups(forecastLayers, forecastContainer, 'forecast');
-    }
-
-    function createLayerGroups(groups, container, section) {
-        Object.entries(groups).forEach(([groupName, layers]) => {
-            const groupDiv = document.createElement('div');
-            groupDiv.className = 'layer-group';
-            groupDiv.innerHTML = `
-                <div class="layer-group-title">${groupName}</div>
-                ${layers.map(layer => `
-                    <div class="layer-item">
-                        <input type="checkbox" id="${layer.toLowerCase().replace(/\s+/g, '-')}" 
-                               data-category="${section}">
-                        <label for="${layer.toLowerCase().replace(/\s+/g, '-')}">${layer}</label>
-                    </div>
-                `).join('')}
-            `;
-            container.appendChild(groupDiv);
-        });
-
-        // Add event listeners to new checkboxes
-        container.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-            checkbox.addEventListener('change', handleLayerToggle);
-        });
-    }
-
-    // Legend control
-    const legend = L.control({position: 'bottomright'});
-    legend.onAdd = function(map) {
-        const div = L.DomUtil.create('div', 'legend');
-        updateLegend(div);
-        return div;
-    };
-    legend.addTo(map);
-
-    function updateLegend(div = document.querySelector('.legend')) {
-        if (!div) return;
-        
-        let content = '<h4>Active Layers</h4>';
-        Object.keys(layers).forEach(layerId => {
-            content += `<div class="legend-item">
-                <span class="legend-color" style="background: #1976d2"></span>
-                ${layerId.replace(/-/g, ' ')}
-            </div>`;
-        });
-        div.innerHTML = content || '<p>No layers active</p>';
-    }
-
-    // Sidebar section switching
-    document.querySelectorAll('.sidebar-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+        switchSection(btn) {
             document.querySelectorAll('.sidebar-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
             
             btn.classList.add('active');
             document.getElementById(`${btn.dataset.section}-section`).classList.add('active');
-        });
-    });
-
-    // Map controls
-    document.getElementById('zoom-in')?.addEventListener('click', () => map.zoomIn());
-    document.getElementById('zoom-out')?.addEventListener('click', () => map.zoomOut());
-    document.getElementById('reset-view')?.addEventListener('click', () => {
-        map.setView([7.9465, -1.0232], 7);
-    });
-
-    // Add basic drawing control (optional)
-    const drawControl = new L.Control.Draw({
-        draw: {
-            polygon: true,
-            rectangle: true,
-            circle: false,
-            circlemarker: false,
-            marker: false,
-            polyline: false
         }
-    });
-    map.addControl(drawControl);
 
-    // Function to load GeoJSON data from a file and update map
-    function loadGeoJSON() {
-        fetch('data/GHA_Admin1.geojson') // Corrected path
-            .then(response => response.json())
-            .then(data => {
-                ghaCountries = data; // Update the `ghaCountries` GeoJSON with the loaded data
-                filterByCountry(''); // Re-apply the country filter (initially all countries)
-            })
-            .catch(error => {
-                console.error('Error loading GeoJSON data:', error);
+        resetMapView() {
+            this.map.setView([7.9465, -1.0232], 7);
+        }
+
+        loadGeoJSON() {
+            fetch('data/GHA_Admin1.geojson')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    this.ghaCountries = data;
+                    this.initializeCountryFilter();
+                    this.filterByCountry('');
+                })
+                .catch(error => {
+                    console.error('Error loading GeoJSON:', error);
+                });
+        }
+
+        initializeCountryFilter() {
+            const countries = [...new Set(this.ghaCountries.features.map(f => f.properties.COUNTRY))].sort();
+            
+            ['monitoring', 'forecast'].forEach(section => {
+                const filterDiv = document.querySelector(`#${section}-section .filters`);
+                const countryFilter = this.createCountryFilter(countries);
+                filterDiv.appendChild(countryFilter);
             });
+        }
+
+        createCountryFilter(countries) {
+            const select = document.createElement('select');
+            select.className = 'filter-select';
+            select.innerHTML = '<option value="">All Countries</option>';
+            
+            countries.forEach(country => {
+                select.innerHTML += `<option value="${country}">${country}</option>`;
+            });
+            
+            select.addEventListener('change', (e) => this.filterByCountry(e.target.value));
+            return select;
+        }
+
+        filterByCountry(countryName) {
+            if (this.currentGeoJSONLayer) {
+                this.map.removeLayer(this.currentGeoJSONLayer);
+            }
+
+            const filteredGeoJSON = countryName 
+                ? {
+                    type: "FeatureCollection",
+                    features: this.ghaCountries.features.filter(feature => 
+                        feature.properties.COUNTRY === countryName
+                    )
+                } 
+                : this.ghaCountries;
+
+            this.currentGeoJSONLayer = L.geoJSON(filteredGeoJSON, {
+                style: this.getGeoJSONStyle
+            }).addTo(this.map);
+
+            if (filteredGeoJSON.features.length > 0) {
+                this.map.fitBounds(this.currentGeoJSONLayer.getBounds());
+            }
+        }
+
+        getGeoJSONStyle() {
+            return {
+                fillColor: '#1976d2',
+                weight: 2,
+                opacity: 1,
+                color: '#ffffff',
+                fillOpacity: 0.3
+            };
+        }
+
+        updateLegend(div = document.querySelector('.legend')) {
+            if (!div) return;
+            
+            let content = '<h4>Active Layers</h4>';
+            Object.keys(this.layers).forEach(layerId => {
+                content += `<div class="legend-item">
+                    <span class="legend-color" style="background: #1976d2"></span>
+                    ${layerId.replace(/-/g, ' ')}
+                </div>`;
+            });
+            div.innerHTML = content || '<p>No layers active</p>';
+        }
     }
 
-    // Load GeoJSON data when the page loads
-    loadGeoJSON();
-
-    // Initialize the interface
-    initializeInterface();
-    filterByCountry('');
+    // Initialize the application
+    const floodWatchApp = new FloodWatchApp();
+    floodWatchApp.init();
 });
