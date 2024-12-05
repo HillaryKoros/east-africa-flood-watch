@@ -25,7 +25,7 @@ A comprehensive web application for flood monitoring and forecasting in East Afr
 ### Local Development
 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR-USERNAME/east-africa-flood-watch.git
+https://github.com/HillaryKoros/east-africa-flood-watch.git
 cd east-africa-flood-watch
 Open the project in VS Code and run it locally using Live Server.
 Alternatively, you can build and run the app using Docker (once the app is Dockerized).
