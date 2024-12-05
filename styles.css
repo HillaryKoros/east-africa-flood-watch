@@ -107,6 +107,8 @@
 
 .layer-group {
     margin-bottom: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
 }
 
 .layer-group-title {
@@ -115,8 +117,7 @@
     color: #1976d2;
     padding: 0.5rem;
     background: #e3f2fd;
-    border: 1px solid #bbdefb;
-    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #bbdefb;
 }
 
 .layer-item {
@@ -127,12 +128,17 @@
     cursor: pointer;
     font-size: 0.85rem;
     color: #444;
+    border-top: 1px solid #f0f0f0;
+}
+
+.layer-item:first-of-type {
+    border-top: none;
 }
 
 .layer-item:hover {
     background: #f5f5f5;
 }
-
+v
 .layer-item input[type="checkbox"] {
     accent-color: #1976d2;
 }

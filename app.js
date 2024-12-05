@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Placeholder GeoJSON for testing
+    let ghaCountries = {
+        type: "FeatureCollection",
+        features: [] // Empty initially, will be loaded from the GeoJSON file
+    };
+
     // Initialize the map
-    const map = L.map('map').setView([0.3, 37.5], 6);
+    const map = L.map('map').setView([7.9465, -1.0232], 7); // Centered on Ghana
 
     // Add the satellite layer as base map
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -60,7 +66,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Create placeholder layer
     function createPlaceholderLayer(name, category) {
-        return L.tileLayer(`https://placeholder.tiles/${category}/${name}/{z}/{x}/{y}.png`, {
+        // Use a mock layer for demonstration
+        return L.tileLayer(`https://example.com/tiles/${category}/${name}.png`, {
             opacity: 0.7
         });
     }
@@ -160,8 +167,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const forecastLayers = {
             'Models': [
                 'FLOODPROOFS',
-                'MIC',
-                'HYDRO',
+                'MIC-HYDRO',
                 'GEOFSM'
             ],
             'Precipitation Forecast': [
@@ -225,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ${layerId.replace(/-/g, ' ')}
             </div>`;
         });
-        div.innerHTML = content;
+        div.innerHTML = content || '<p>No layers active</p>';
     }
 
     // Sidebar section switching
@@ -239,7 +245,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Analysis controls
+    // Map controls
+    document.getElementById('zoom-in')?.addEventListener('click', () => map.zoomIn());
+    document.getElementById('zoom-out')?.addEventListener('click', () => map.zoomOut());
+    document.getElementById('reset-view')?.addEventListener('click', () => {
+        map.setView([7.9465, -1.0232], 7);
+    });
+
+    // Add basic drawing control (optional)
     const drawControl = new L.Control.Draw({
         draw: {
             polygon: true,
@@ -252,12 +265,23 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     map.addControl(drawControl);
 
-    // Load GeoJSON and initialize interface
-    fetch('data\GHA_Admin1.geojson')
-        .then(response => response.json())
-        .then(data => {
-            window.ghaCountries = data;
-            initializeInterface();
-            filterByCountry('');
-        });
+    // Function to load GeoJSON data from a file and update map
+    function loadGeoJSON() {
+        fetch('data/GHA_Admin1.geojson') // Corrected path
+            .then(response => response.json())
+            .then(data => {
+                ghaCountries = data; // Update the `ghaCountries` GeoJSON with the loaded data
+                filterByCountry(''); // Re-apply the country filter (initially all countries)
+            })
+            .catch(error => {
+                console.error('Error loading GeoJSON data:', error);
+            });
+    }
+
+    // Load GeoJSON data when the page loads
+    loadGeoJSON();
+
+    // Initialize the interface
+    initializeInterface();
+    filterByCountry('');
 });

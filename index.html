@@ -18,14 +18,14 @@
             <a href="#">Analysis</a>
         </nav>
     </header>
-
+    
     <main class="main-container">
         <aside class="sidebar">
             <div class="sidebar-buttons">
                 <button class="sidebar-btn active" data-section="monitoring">Monitoring</button>
                 <button class="sidebar-btn" data-section="forecast">Forecast</button>
             </div>
-
+            
             <div class="content-section active" id="monitoring-section">
                 <div class="filters">
                     <!-- Country filter will be inserted here by JavaScript -->
@@ -34,7 +34,7 @@
                     <!-- Layer groups will be inserted here by JavaScript -->
                 </div>
             </div>
-
+            
             <div class="content-section" id="forecast-section">
                 <div class="filters">
                     <!-- Country filter will be inserted here by JavaScript -->
@@ -44,16 +44,16 @@
                 </div>
             </div>
         </aside>
-
+        
         <div id="map"></div>
-
+        
         <div id="map-controls">
             <button id="zoom-in" title="Zoom In">+</button>
             <button id="zoom-out" title="Zoom Out">-</button>
             <button id="reset-view" title="Reset View">⟲</button>
         </div>
     </main>
-
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script src="app.js"></script>
