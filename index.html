@@ -8,9 +8,6 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     
-    <!-- Leaflet Draw CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css" />
-    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
@@ -27,7 +24,6 @@
             <a href="#" class="nav-item">Analysis</a>
             <a href="#" class="nav-item">About</a>
             <a href="#" class="nav-item">Contact</a>
-            <a href="#" class="nav-item"><i class="fas fa-search"></i></a>
         </nav>
     </header>
 
@@ -42,38 +38,85 @@
                 </button>
             </div>
 
+            <!-- Shared Admin Boundary Filter -->
+            <div class="filters">
+                <select class="filter-select" id="admin0-filter">
+                    <option value="">Select Admin Level 0</option>
+                </select>
+                <select class="filter-select" id="admin1-filter">
+                    <option value="">Select Admin Level 1</option>
+                </select>
+            </div>
+
+            <!-- Monitoring Section -->
             <div id="monitoring-section" class="content-section active">
-                <div class="filters">
-                    <!-- Country and Cluster Filters will be dynamically added -->
-                </div>
                 <div class="layers-container">
-                    <!-- Layer groups will be dynamically populated -->
+                    <!-- Monitoring layers -->
+                    <div class="layer-group">
+                        <div class="layer-group-title">Precipitation</div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="standardized-precipitation-index-chirps">
+                            <label for="standardized-precipitation-index-chirps">Standardized precipitation index (CHIRPS)</label>
+                        </div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="monthly-precipitation-chirps">
+                            <label for="monthly-precipitation-chirps">Monthly precipitation (CHIRPS)</label>
+                        </div>
+                    </div>
+                    <div class="layer-group">
+                        <div class="layer-group-title">Soil Moisture</div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="monthly-soil-moisture">
+                            <label for="monthly-soil-moisture">Monthly soil moisture</label>
+                        </div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="seasonal-soil-moisture">
+                            <label for="seasonal-soil-moisture">Seasonal soil moisture</label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- Forecast Section -->
             <div id="forecast-section" class="content-section">
-                <div class="filters">
-                    <!-- Country and Cluster Filters will be dynamically added -->
-                </div>
                 <div class="layers-container">
-                    <!-- Layer groups will be dynamically populated -->
+                    <!-- Forecast layers -->
+                    <div class="layer-group">
+                        <div class="layer-group-title">Models</div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="floodproofs">
+                            <label for="floodproofs">FLOODPROOFS</label>
+                        </div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="mic-hydro">
+                            <label for="mic-hydro">MIC-HYDRO</label>
+                        </div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="geofsm">
+                            <label for="geofsm">GEOFSM</label>
+                        </div>
+                    </div>
+                    <div class="layer-group">
+                        <div class="layer-group-title">Precipitation Forecast</div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="monthly-precipitation-forecast">
+                            <label for="monthly-precipitation-forecast">Monthly precipitation forecast</label>
+                        </div>
+                        <div class="layer-item">
+                            <input type="checkbox" id="seasonal-precipitation-forecast">
+                            <label for="seasonal-precipitation-forecast">Seasonal precipitation forecast</label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
+        <!-- Map Area -->
         <div id="map"></div>
-
-        <div id="map-controls">
-            <button id="zoom-in" title="Zoom In"><i class="fas fa-plus"></i></button>
-            <button id="zoom-out" title="Zoom Out"><i class="fas fa-minus"></i></button>
-            <button id="reset-view" title="Reset View"><i class="fas fa-redo"></i></button>
-        </div>
     </main>
 
-    <!-- External Libraries -->
+    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
-    
     <!-- Application Script -->
     <script src="app.js"></script>
 </body>
