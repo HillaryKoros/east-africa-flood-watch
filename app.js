@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById(`${section}-section`).classList.add('active');
         }
 
-        // Data Loading Methods
+        // Data Loading Methods ()
         loadGeoJSON() {
             const adminLevels = ['Admin0', 'Admin1'];
             const geojsonPromises = adminLevels.map((level) =>

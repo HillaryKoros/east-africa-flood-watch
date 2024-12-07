@@ -31,92 +31,132 @@
 
     <!-- Main layout -->
     <main class="main-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <!-- Sidebar navigation buttons -->
-            <div class="sidebar-buttons">
-                <button class="sidebar-btn active" data-section="monitoring">
-                    <i class="fas fa-chart-line"></i> Monitoring
-                </button>
-                <button class="sidebar-btn" data-section="forecast">
-                    <i class="fas fa-chart-area"></i> Forecast
-                </button>
-            </div>
+       <!-- Sidebar -->
+<div class="sidebar">
+    <!-- Sidebar navigation buttons -->
+    <div class="sidebar-buttons">
+        <button class="sidebar-btn active" data-section="monitoring">
+            <i class="fas fa-chart-line"></i> Monitoring
+        </button>
+        <button class="sidebar-btn" data-section="forecast">
+            <i class="fas fa-chart-area"></i> Forecast
+        </button>
+    </div>
 
-            <!-- Filter dropdowns for administrative levels -->
-            <div class="filters">
-                <select class="filter-select" id="admin0-filter">
-                    <option value="">Select Admin Level 0</option>
-                </select>
-                <select class="filter-select" id="admin1-filter">
-                    <option value="">Select Admin Level 1</option>
-                </select>
-            </div>
+    <!-- Filter dropdowns for administrative levels -->
+    <div class="filters">
+        <select class="filter-select" id="admin0-filter">
+            <option value="">Select Admin Level 0</option>
+        </select>
+        <select class="filter-select" id="admin1-filter">
+            <option value="">Select Admin Level 1</option>
+        </select>
+    </div>
 
-            <!-- Monitoring Section -->
-            <div id="monitoring-section" class="content-section active">
-                <div class="layers-container">
-                    <!-- Precipitation Layers -->
-                    <div class="layer-group">
-                        <div class="layer-group-title">Precipitation</div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="standardized-precipitation-index-chirps">
-                            <label for="standardized-precipitation-index-chirps">Standardized precipitation index (CHIRPS)</label>
-                        </div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="monthly-precipitation-chirps">
-                            <label for="monthly-precipitation-chirps">Monthly precipitation (CHIRPS)</label>
-                        </div>
-                    </div>
-                    <!-- Soil Moisture Layers -->
-                    <div class="layer-group">
-                        <div class="layer-group-title">Soil Moisture</div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="monthly-soil-moisture">
-                            <label for="monthly-soil-moisture">Monthly soil moisture</label>
-                        </div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="seasonal-soil-moisture">
-                            <label for="seasonal-soil-moisture">Seasonal soil moisture</label>
-                        </div>
-                    </div>
+    <!-- Monitoring Section -->
+    <div id="monitoring-section" class="content-section active">
+        <div class="layers-container">
+            <!-- Precipitation Layers -->
+            <div class="layer-group">
+                <div class="layer-group-title">Precipitation</div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="standardized-precipitation-index-chirps">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Standardized precipitation index (CHIRPS)</span>
+                </div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="monthly-precipitation-chirps">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Monthly precipitation (CHIRPS)</span>
                 </div>
             </div>
-
-            <!-- Forecast Section -->
-            <div id="forecast-section" class="content-section">
-                <div class="layers-container">
-                    <!-- Model Layers -->
-                    <div class="layer-group">
-                        <div class="layer-group-title">Models</div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="floodproofs">
-                            <label for="floodproofs">FLOODPROOFS</label>
-                        </div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="mic-hydro">
-                            <label for="mic-hydro">MIC-HYDRO</label>
-                        </div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="geofsm">
-                            <label for="geofsm">GEOFSM</label>
-                        </div>
-                    </div>
-                    <!-- Precipitation Forecast Layers -->
-                    <div class="layer-group">
-                        <div class="layer-group-title">Precipitation Forecast</div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="monthly-precipitation-forecast">
-                            <label for="monthly-precipitation-forecast">Monthly precipitation forecast</label>
-                        </div>
-                        <div class="layer-item">
-                            <input type="checkbox" id="seasonal-precipitation-forecast">
-                            <label for="seasonal-precipitation-forecast">Seasonal precipitation forecast</label>
-                        </div>
-                    </div>
+            <!-- Soil Moisture Layers -->
+            <div class="layer-group">
+                <div class="layer-group-title">Soil Moisture</div>
+                <div class="layer-item">
+                    <input type="checkbox" id="monthly-soil-moisture">
+                    <label for="monthly-soil-moisture">Monthly soil moisture</label>
+                </div>
+                <div class="layer-item">
+                    <input type="checkbox" id="seasonal-soil-moisture">
+                    <label for="seasonal-soil-moisture">Seasonal soil moisture</label>
+                </div>
+            </div>
+            <!-- Admin Layer -->
+            <div class="layer-group">
+                <div class="layer-group-title">Admin Layers</div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="admin-layer-monitoring">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Admin Layer 1</span>
+                </div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="admin-layer-2-monitoring">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Admin Layer 2</span>
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Forecast Section -->
+    <div id="forecast-section" class="content-section">
+        <div class="layers-container">
+            <!-- Model Layers -->
+            <div class="layer-group">
+                <div class="layer-group-title">Models</div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="floodproofs">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>FLOODPROOFS</span>
+                </div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="mic-hydro">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>MIC-HYDRO</span>
+                </div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="geofsm">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>GEOFSM</span>
+                </div>
+            </div>
+            <!-- Admin Layer -->
+            <div class="layer-group">
+                <div class="layer-group-title">Admin Layers</div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="admin-layer-forecast">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Admin Layer 1</span>
+                </div>
+                <div class="layer-item">
+                    <label class="switch">
+                        <input type="checkbox" id="admin-layer-2-forecast">
+                        <span class="slider round"></span>
+                    </label>
+                    <span>Admin Layer 2</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
         <!-- Map Display -->
         <div id="map"></div>
