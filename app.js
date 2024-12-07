@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
         initMap() {
             this.map = L.map('map', {
                 center: [4.3, 35.5],
-                zoom: 6,
+                zoom: 4,
                 zoomControl: true,
                 layers: []
             });
