@@ -5,18 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>East Africa Flood Watch</title>
     
-    <!-- Leaflet CSS -->
+    <!-- Leaflet CSS for map rendering -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     
-    <!-- Font Awesome -->
+    <!-- Font Awesome for sidebar icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- Custom Styles -->
+    <!-- Custom CSS for layout and design -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Header section -->
     <header class="header">
         <div class="logo-text">EAST AFRICA FLOOD WATCH</div>
+        <!-- Navigation menu -->
         <nav class="nav-menu">
             <a href="#" class="nav-item">Home</a>
             <a href="#" class="nav-item active">Mapviewer</a>
@@ -27,8 +29,11 @@
         </nav>
     </header>
 
+    <!-- Main layout -->
     <main class="main-container">
+        <!-- Sidebar -->
         <div class="sidebar">
+            <!-- Sidebar navigation buttons -->
             <div class="sidebar-buttons">
                 <button class="sidebar-btn active" data-section="monitoring">
                     <i class="fas fa-chart-line"></i> Monitoring
@@ -38,7 +43,7 @@
                 </button>
             </div>
 
-            <!-- Shared Admin Boundary Filter -->
+            <!-- Filter dropdowns for administrative levels -->
             <div class="filters">
                 <select class="filter-select" id="admin0-filter">
                     <option value="">Select Admin Level 0</option>
@@ -51,7 +56,7 @@
             <!-- Monitoring Section -->
             <div id="monitoring-section" class="content-section active">
                 <div class="layers-container">
-                    <!-- Monitoring layers -->
+                    <!-- Precipitation Layers -->
                     <div class="layer-group">
                         <div class="layer-group-title">Precipitation</div>
                         <div class="layer-item">
@@ -63,6 +68,7 @@
                             <label for="monthly-precipitation-chirps">Monthly precipitation (CHIRPS)</label>
                         </div>
                     </div>
+                    <!-- Soil Moisture Layers -->
                     <div class="layer-group">
                         <div class="layer-group-title">Soil Moisture</div>
                         <div class="layer-item">
@@ -80,7 +86,7 @@
             <!-- Forecast Section -->
             <div id="forecast-section" class="content-section">
                 <div class="layers-container">
-                    <!-- Forecast layers -->
+                    <!-- Model Layers -->
                     <div class="layer-group">
                         <div class="layer-group-title">Models</div>
                         <div class="layer-item">
@@ -96,6 +102,7 @@
                             <label for="geofsm">GEOFSM</label>
                         </div>
                     </div>
+                    <!-- Precipitation Forecast Layers -->
                     <div class="layer-group">
                         <div class="layer-group-title">Precipitation Forecast</div>
                         <div class="layer-item">
@@ -111,13 +118,13 @@
             </div>
         </div>
 
-        <!-- Map Area -->
+        <!-- Map Display -->
         <div id="map"></div>
     </main>
 
-    <!-- Leaflet JS -->
+    <!-- Leaflet JS for map rendering -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <!-- Application Script -->
+    <!-- Custom JavaScript for the application -->
     <script src="app.js"></script>
 </body>
 </html>
